@@ -1,16 +1,15 @@
-package saulmm.myapplication;
+package harithaBob.myapplication;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import static saulmm.myapplication.MainActivity.mTotalPoints;
+import static harithaBob.myapplication.MainActivity.mTotalPoints;
 
 public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public TextView productPoint;

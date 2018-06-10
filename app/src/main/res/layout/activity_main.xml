@@ -146,7 +146,7 @@
         app:border_width="2dp"
         app:finalHeight="@dimen/_45sdp"
         app:finalYPosition="2dp"
-        app:layout_behavior="saulmm.myapplication.AvatarImageBehavior"
+        app:layout_behavior="harithaBob.myapplication.AvatarImageBehavior"
         app:startHeight="2dp"
         app:startToolbarPosition="2dp"
         app:startXPosition="2dp"
