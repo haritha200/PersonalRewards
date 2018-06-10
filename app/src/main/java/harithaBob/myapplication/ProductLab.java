@@ -1,3 +1,4 @@
+
 package harithaBob.myapplication;
 
 import android.content.ContentValues;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import database.AppDbHelper;
+import database.AppDbSchema.HistoryTable;
 import database.AppDbSchema.ProductTable;
 
 public class ProductLab {
@@ -24,7 +26,7 @@ public class ProductLab {
         return sProductLab;
     }
 
-    private ProductLab(Context context) {     //private constructor => only this class can create the object.
+    private ProductLab(Context context) {
         mSQLiteDatabase = new AppDbHelper(context).getWritableDatabase();
         mContext= context;
         mProducts = new ArrayList<ProductObject>();
@@ -32,7 +34,7 @@ public class ProductLab {
     }
 
     public void updateProduct(ProductObject c){
-        ContentValues values = getContentValues(c); //ie in onPause of CrimeFragment
+        ContentValues values = getContentValues(c);
         mSQLiteDatabase.update(ProductTable.NAME, values,
                 ProductTable.Cols.PRODUCTID+ "= ?",
                 new String[]
@@ -57,7 +59,7 @@ public class ProductLab {
         return values;
     }
 
-    public ArrayList<ProductObject> getProducts() {  //return as a List, so we can change or datastructure to Linkedlist or something if we need to in the future
+    public ArrayList<ProductObject> getProducts() {
         String query= "SELECT * FROM " + ProductTable.NAME + " ORDER BY  "+ProductTable.Cols.PRODUCTPOINT+" DESC";
         Cursor cursor= mSQLiteDatabase.rawQuery(query,null);
         ArrayList<ProductObject> products= new ArrayList<ProductObject>();
@@ -84,16 +86,14 @@ public class ProductLab {
                 null,
                 null
         );
-        //use try block mostly because ummm <not sure> but so that 'finally' has cursor.close() ?
         try{
             if(cursor.getCount() !=0) {
-                cursor.moveToFirst();       //IMPORTANT. MOVE TO FIRST ROW OF ALL RETRIEVED ROWS, (here 1 row only)
-                //unpack from table and into Crime Object
+                cursor.moveToFirst();
                 ProductObject c= packProductObject(cursor);
                 return c;
             }
         } finally {
-            cursor.close();     //IMPORTANT TO CLOSE YOUR CURSOR
+            cursor.close();
         }
         return null;
     }
@@ -105,13 +105,48 @@ public class ProductLab {
         int productPointSum = cursor.getInt(cursor.getColumnIndex(ProductTable.Cols.PRODUCTPOINTSUM));
         String productId=cursor.getString(cursor.getColumnIndex(ProductTable.Cols.PRODUCTID));
 
-        //pack into Crime object
-        ProductObject c= new ProductObject(productname,productImage,productpoint,productPointSum);  //create crime obj with details from the table's cursor
+        //pack into product object
+        ProductObject c= new ProductObject(productname,productImage,productpoint,productPointSum);
         c.setPointSum(productPointSum);
         c.setPoint(productpoint);
         c.setImagePath(productImage);
         c.setName(productname);
         c.setId(UUID.fromString(productId));
         return c;
+    }
+
+    public void addToUndoTable(ProductObject c){
+        if(c!=null){
+            ContentValues values= getContentValues(c);
+            mSQLiteDatabase.insert(HistoryTable.NAME,null,values);
+        }
+    }
+
+    public ProductObject getUndoProduct(){
+        String query= "SELECT * FROM " + HistoryTable.NAME + " ORDER BY _id DESC LIMIT 1";
+        Cursor cursor= mSQLiteDatabase.rawQuery(query,null);
+        try{
+            if(cursor.getCount()==1) {
+                cursor.moveToFirst();
+                ProductObject c= packProductObject(cursor);
+                deleteUndoRecord(cursor.getInt(0));
+                return c;
+            }
+        } finally {
+            cursor.close();
+        }
+        return null;
+    }
+
+    public void deleteUndoRecord(int id){
+        mSQLiteDatabase.delete(HistoryTable.NAME,
+                "_id = ?",
+                new String[]
+                        {id+""}
+        );
+    }
+
+    public void deleteAllUndoRecords(){
+        mSQLiteDatabase.execSQL("delete from "+ HistoryTable.NAME);
     }
 }

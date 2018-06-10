@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
@@ -43,13 +44,36 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         bindActivity();
         mAppBarLayout.addOnOffsetChangedListener(this);
+
         mToolbar.inflateMenu(R.menu.menu_main);
         mToolbar.setNavigationIcon(R.drawable.ic_redeem);
-        startAlphaAnimation(mTitle, 0, View.INVISIBLE);
-        mRecyclerView.setLayoutManager(mGrid);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setNestedScrollingEnabled(false);
-        mRecyclerView.setAdapter(mAdapter);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.undo:
+
+                        ProductLab plab = ProductLab.get(MainActivity.this);
+                        ProductObject p = plab.getUndoProduct();
+                        if(p==null){
+                            Snackbar.make(getWindow().getDecorView(), "Nothing left to undo", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                            return true;
+                        }
+                        plab.updateProduct(p);
+                        ArrayList products= plab.getProducts();
+                        mRecyclerView.setAdapter(new ProductAdapter(MainActivity.this, products));
+                        mRecyclerView.getAdapter().notifyDataSetChanged();
+                        updateMainUI();
+                        Snackbar.make(getWindow().getDecorView(), "Undone "+p.getName(), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                        return true;
+                    default:
+                        return true;
+                }
+            }
+        });
+
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,11 +87,19 @@ public class MainActivity extends AppCompatActivity
                 mRecyclerView.setAdapter(new ProductAdapter(MainActivity.this, products));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 mTotalPoints.setText("0\nPOINTS");
-
+                plab.deleteAllUndoRecords();
                 Snackbar.make(view, "Redeemed all points. ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+
+        startAlphaAnimation(mTitle, 0, View.INVISIBLE);
+
+        mRecyclerView.setLayoutManager(mGrid);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setAdapter(mAdapter);
+
         updateMainUI();
 
     }
@@ -146,8 +178,9 @@ public class MainActivity extends AppCompatActivity
 
     private void updateMainUI(){
         int tot = 0;
-        for(int i =0; i <mAdapter.productList.size(); i++){
-            tot+=mAdapter.productList.get(i).getPointSum();
+        ArrayList<ProductObject> productList = ProductLab.get(this).getProducts();
+        for(int i =0; i <productList.size(); i++){
+            tot+=productList.get(i).getPointSum();
         }
         mTotalPoints.setText(Integer.toString(tot) + "\n POINTS");
     }

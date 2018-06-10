@@ -40,17 +40,20 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
 
     @Override
     public void onClick(View view) {
+        ProductLab plab = ProductLab.get(mContext);
+        plab.addToUndoTable(mProduct);
+
         mProduct.setPointSum(mProduct.getPoint()+ mProduct.getPointSum());
-        ProductLab.get(mContext).updateProduct(mProduct);
+        plab.updateProduct(mProduct);
         productAccu.setText(Integer.toString(mProduct.getPointSum()));
 
-        ArrayList<ProductObject> products = ProductLab.get(mContext).getProducts();
+        ArrayList<ProductObject> products = plab.getProducts();
         int tot = 0;
         for (int i=0; i<products.size(); i++){
             tot+=products.get(i).getPointSum();
         }
         mTotalPoints.setText(tot+"\nPOINTS");
-        Snackbar.make(view, "Woohoo! Didn't eat "+ mProduct.getName()  + "Earned " + mProduct.getPoint()+"points", Snackbar.LENGTH_LONG)
+        Snackbar.make(view, "Woohoo! Didn't eat "+ mProduct.getName()  + "Earned " + mProduct.getPoint()+"points", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
 }

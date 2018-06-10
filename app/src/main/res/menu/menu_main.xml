@@ -9,8 +9,8 @@
         <!--app:showAsAction="never"-->
         <!--android:title="Settings" />-->
 
-    <item android:id="@+id/menu_share"
-        android:icon="@drawable/ic_heart_outline_white_24dp"
+    <item android:id="@+id/undo"
+        android:icon="@drawable/ic_undo"
         app:showAsAction="always"
         android:title="Favorite" />
 </menu>

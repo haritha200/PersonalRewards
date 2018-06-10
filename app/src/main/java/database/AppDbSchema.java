@@ -28,4 +28,18 @@ public class AppDbSchema {
         }
 
     }
+
+    public static final class HistoryTable {
+        public static final String NAME = "HistoryTable";
+
+        public static final class Cols {
+            public static final String PRODUCTNAME = "productName";
+            public static final String PRODUCTPOINT = "productPoint";
+            public static final String PRODUCTPOINTSUM = "productPointSum";
+            public static final String PRODUCTIMAGE = "productImage";
+            public static final String PRODUCTID = "productId";
+
+        }
+
+    }
 }

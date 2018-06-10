@@ -4,7 +4,6 @@
                                     android:id="@+id/direction_card_view"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginBottom="1dp"
                                     card_view:cardElevation="@dimen/_3sdp"
                                     card_view:cardUseCompatPadding="true">
 
@@ -36,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="laptop | "
             android:textColor="@color/primaryDark"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_11sdp"
             android:textStyle="bold" />
         <TextView
             android:id="@+id/product_point"
@@ -44,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="35"
             android:textColor="@color/primaryDark"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_11sdp"
             android:textStyle="bold" />
     </LinearLayout>
         <TextView
