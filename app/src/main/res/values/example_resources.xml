@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- colors -->
+    <color name="primary">#1A237E</color>
+    <color name="primaryDark">#000000</color>
+
+    <!-- dimensions -->
+    <dimen name="image_width">120dp</dimen>
+    <dimen name="image_final_width">32dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+
+    <!-- styles -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+    </style>
+
+    <!-- strings -->
+    <string name="app_name">Personal Rewards</string>
+    <string name="description">Eat crappy, feel Crappy.</string>
+    <string name="titlename">Personal Rewards</string>
+
+</resources>
